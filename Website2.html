@@ -3,9 +3,14 @@
 <head>
   <link rel="stylesheet" href="WebsiteStyle.css">
     <title>Ting - Page 2</title>
-
+<style>
+canvas {
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
 </head>
-<body>
+<body onload="startBall()">
 <h1>Adam Ting - Website</h1>
 <div class="menu">
 <ul>
@@ -18,13 +23,79 @@
 </div>
 
 <div class="column space">
-
-
 </div>
 
 <div class="column content">
 
 <br><p>This is a paragraph on page 2. <kbd>It has a sentence in the browser's default monospace font.</kbd></p>
+
+
+<canvas id="main" width="200" height="100" style="border:1px solid     #c3c3c3;">
+    </canvas>
+<script>
+	var speedin=30*Math.random();
+	var anglein=2*Math.PI*Math.random();
+	
+	var Ball;	
+	
+	function startBall() {
+		Ball = new component( 10, "red", 40, 120);
+		Area.start();
+	}
+	
+	
+	var Area = {
+		main : document.getElementById("main"),
+		start : function() {
+			this.main.width = 600;
+			this.main.height = 300;
+			this.context = this.main.getContext("2d");
+			this.interval = setInterval(updateArea, 20);
+		},
+		clear : function() {
+			this.context.clearRect(0, 0, this.main.width, this.main.height);
+		}
+	}
+	
+	function component(radius, color, x, y) {
+		this.radius = radius;
+		this.x = x;
+		this.y = y;
+		this.vx = speedin*Math.cos(anglein);
+		this.vy = -speedin*Math.sin(anglein);
+		this.update = function(){
+			ctx=Area.context;
+			ctx.beginPath();
+			ctx.fillstyle=color;
+			ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+			ctx.fill();
+		};
+		this.move = function(){
+			this.vx = this.vx*((-1)**(xedgecollision()));
+			this.vy = this.vy*((-1)**(yedgecollision()));
+			this.x += this.vx;
+			this.y -= this.vy;
+		}
+	}
+	
+	function xedgecollision() {
+		this.w=Area.main.width;
+		this.h=Area.main.height;
+		return((Ball.x+Ball.radius>this.w)||(Ball.x-Ball.radius<0));
+	}
+	function yedgecollision() {
+		this.w=Area.main.width;
+		this.h=Area.main.height;
+		return((Ball.y+Ball.radius>this.h)||(Ball.y-Ball.radius<0));
+	}
+	
+	
+	function updateArea() {
+		Area.clear();
+		Ball.move();
+		Ball.update();
+	}
+</script>
 
 </div>
 
